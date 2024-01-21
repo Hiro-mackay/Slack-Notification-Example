@@ -6,6 +6,16 @@ import { Input } from "@/components/ui/input";
 import { Trash2 } from "lucide-react";
 import { FormEventHandler, useState } from "react";
 
+export const sendTaskToSlack = (task: string) => {
+  return fetch("/api/slack/send-message", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ task }),
+  });
+};
+
 export default function Home() {
   const [todo, setTodo] = useState<string[]>([]);
 
@@ -16,6 +26,7 @@ export default function Home() {
     const data = new FormData(form);
     const task = data.get("task") as string;
     setTodo([...todo, task]);
+    sendTaskToSlack(task);
     form.reset();
   };
 
